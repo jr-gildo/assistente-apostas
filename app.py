@@ -33,7 +33,7 @@ with col_config:
                 st.error(f"Erro: {err_msg[:200]}")
     st.caption("")
     st.markdown("---")
-    st.caption("Desenvolvido por ***Gildo Junior**")
+    st.caption("Desenvolvido por **Gildo Junior**")
 
 with col_jogos:
     st.subheader("📋 Jogos do Dia")
