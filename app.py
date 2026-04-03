@@ -14,7 +14,7 @@ with col_config:
     st.markdown("#### MODO")
     modo = st.radio(
         "",
-        ["Múltiplas (geral)", "Escanteios"],
+        ["Geral", "Escanteios"],
         index=0
     )
     if st.button("Atualizar dados", use_container_width=True):
@@ -50,7 +50,7 @@ with col_jogos:
                     st.write(f"**Placar mais provável:** {pred.get('most_likely_score', 'N/A')}")
 
 with col_bilhetes:
-    st.subheader("🤖 Gerar Bilhetes")
+    st.subheader("🤖 Gerar Análises")
     if st.button("Executar Análise", use_container_width=True):
         if not partidas:
             st.error("Não há jogos para analisar. Atualize os dados.")
