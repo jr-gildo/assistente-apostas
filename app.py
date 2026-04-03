@@ -60,7 +60,7 @@ with col_bilhetes:
             prompt_file = "prompt_multiplas.txt" if modo == "Geral" else "prompt_escanteios.txt"
             #st.write(f"Arquivo de prompt: {prompt_file}") <-- mostra para o usuário o prompt selecionado
             system_prompt = carregar_prompt(prompt_file)
-            with st.spinner("Consultando a OpenAI..."):
+            with st.spinner("Analisando jogos ..."):
                 resposta = gerar_bilhetes(system_prompt, contexto)
             st.success("Análise concluída!")
             st.markdown("### 📝 Sugestões de Bilhetes")
