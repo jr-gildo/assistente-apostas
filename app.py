@@ -57,7 +57,7 @@ with col_bilhetes:
             contexto = formatar_contexto_partidas(partidas)
             # Mostra o modo selecionado
             st.write(f"Modo selecionado: {modo}")
-            prompt_file = "prompt_multiplas.txt" if modo == "Múltiplas (geral)" else "prompt_escanteios.txt"
+            prompt_file = "prompt_multiplas.txt" if modo == "Geral" else "prompt_escanteios.txt"
             st.write(f"Arquivo de prompt: {prompt_file}")
             system_prompt = carregar_prompt(prompt_file)
             with st.spinner("Consultando a OpenAI..."):
