@@ -50,15 +50,17 @@ with col_jogos:
                     st.write(f"**Placar mais provável:** {pred.get('most_likely_score', 'N/A')}")
 
 with col_bilhetes:
-    st.subheader("🤖 Gerar Análises")
     if st.button("Executar Análise", use_container_width=True):
         if not partidas:
-            st.error("Não há jogos para analisar. Atualize os dados.")
+            st.error("Não há jogos para analisar.")
         else:
             contexto = formatar_contexto_partidas(partidas)
+            # Mostra o modo selecionado
+            st.write(f"Modo selecionado: {modo}")
             prompt_file = "prompt_multiplas.txt" if modo == "Múltiplas (geral)" else "prompt_escanteios.txt"
+            st.write(f"Arquivo de prompt: {prompt_file}")
             system_prompt = carregar_prompt(prompt_file)
-            with st.spinner("Analisando os Jogos"):
+            with st.spinner("Consultando a OpenAI..."):
                 resposta = gerar_bilhetes(system_prompt, contexto)
             st.success("Análise concluída!")
             st.markdown("### 📝 Sugestões de Bilhetes")
