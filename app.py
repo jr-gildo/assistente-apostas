@@ -32,9 +32,7 @@ with col_config:
                 err_msg = result.stderr.encode('ascii', 'ignore').decode()
                 st.error(f"Erro: {err_msg[:200]}")
     st.caption("")
-    st.markdown("---")
-    st.caption("Desenvolvido por **Gildo Junior**")
-
+    
 with col_jogos:
     st.subheader("📋 Jogos do Dia")
     partidas = carregar_partidas_do_json()
@@ -67,3 +65,5 @@ with col_bilhetes:
             st.success("Análise concluída!")
             st.markdown("### 📝 Sugestões de Bilhetes")
             st.markdown(resposta)
+            st.markdown("---")
+            st.caption("App criado por Gildo Junior – Use com responsabilidade.")
