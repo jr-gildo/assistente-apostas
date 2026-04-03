@@ -56,9 +56,9 @@ with col_bilhetes:
         else:
             contexto = formatar_contexto_partidas(partidas)
             # Mostra o modo selecionado
-            st.write(f"Modo selecionado: {modo}")
+            #st.write(f"Modo selecionado: {modo}") <-- mostra para o usuário o modo selecionado
             prompt_file = "prompt_multiplas.txt" if modo == "Geral" else "prompt_escanteios.txt"
-            st.write(f"Arquivo de prompt: {prompt_file}")
+            #st.write(f"Arquivo de prompt: {prompt_file}") <-- mostra para o usuário o prompt selecionado
             system_prompt = carregar_prompt(prompt_file)
             with st.spinner("Consultando a OpenAI..."):
                 resposta = gerar_bilhetes(system_prompt, contexto)
