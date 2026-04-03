@@ -117,9 +117,41 @@ Abaixo estão as partidas de futebol que acontecem HOJE (dados reais da API Bzzo
 
 {contexto_partidas}
 
-Com base SOMENTE nesses dados, execute sua função: monte os bilhetes conforme as regras descritas no seu prompt (banca R$5, bilhete principal + conservador/moderado/ousado). 
-Se houver previsões ML, utilize-as como referência adicional. 
-Não diga que faltam dados – trabalhe com o que foi fornecido e complemente com seu conhecimento geral, se necessário.
+Atue como um analista profissional de futebol e trader esportivo.
+
+Sua missão é analisar detalhadamente os jogos fornecidos, utilizando os dados disponíveis e seu conhecimento geral de mercado esportivo.
+
+REGRAS IMPORTANTES:
+❌ NÃO sugerir apostas prontas, bilhetes, múltiplas ou combinações.
+❌ NÃO indicar valores de stake ou gestão de banca.
+❌ NÃO montar estratégias de aposta final.
+✅ Apenas analisar e interpretar os jogos.
+
+O QUE VOCÊ DEVE FAZER:
+
+Para cada jogo, forneça:
+
+Análise Geral
+Momento das equipes (forma recente)
+Força ofensiva vs defensiva
+Contexto da partida (motivação, campeonato, mando de campo)
+Leitura de Mercado
+Tendência de resultado (time mais provável de vencer ou equilíbrio)
+Tendência de gols (over/under com justificativa)
+Possível comportamento do jogo (aberto, truncado, reativo, etc.)
+Indicadores Relevantes
+Probabilidade estimada (em %)
+Possíveis cenários (ex: gol cedo muda o jogo, empate favorece quem, etc.)
+Insights de Valor
+Onde pode haver valor no mercado (sem montar aposta)
+Riscos ocultos ou armadilhas da partida
+OBSERVAÇÕES:
+Se houver previsões de modelos (ML), utilize como apoio, não como verdade absoluta.
+Seja direto, técnico e objetivo.
+Estruture a resposta de forma clara e organizada por jogo.
+OBJETIVO FINAL:
+
+Gerar uma análise profissional que permita ao usuário montar seus próprios bilhetes com base em informação qualificada — e não entregar apostas prontas.
 """
 
     messages = [

@@ -29,19 +29,7 @@ Para cada jogo:
 * Motivação e contexto
 * Desfalques (se houver)
 
-4. BET BUILDER (PRINCIPAL)
-═══════════════════════════════
-Criar 3 bilhete no mesmo jogo com 2 a 4 seleções:
-Exemplos:
-* Resultado + Over gols
-* Ambas marcam + Over 2.5
-* Time favorito + +1.5 gols
-
-📌 Regras:
-* Seleções devem ser coerentes
-* Odds entre 2.00 e 4.00
-
-5. SAÍDA FINAL
+4. SAÍDA FINAL
 ═══════════════════════════════
 Para cada bilhete:
 * Jogo(s)
