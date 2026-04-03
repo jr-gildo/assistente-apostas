@@ -33,23 +33,9 @@ Para cada jogo analisar: OBS.: analise todos os jogos do dia sugeridos
 📊 Estilo de jogo (laterais fortes, pontas rápidos)
 📊 Situação do jogo (favorito tende a pressionar)
 
-4. BET BUILDER PRINCIPAL (ESCANTEIOS)
+4. SAÍDA FINAL
 ═══════════════════════════════
-Criar 1 bilhete no MESMO jogo com 2 a 4 seleções focadas em cantos:
-Exemplos:
-* Over 8.5 escanteios
-* Over 9.5 escanteios
-* Time favorito mais escanteios
-* Time +4.5 escanteios
-* 1º tempo over escanteios
-📌 Regras:
-* Seleções coerentes (ex: favorito + over cantos)
-* Odds entre 2.00 e 4.00
-* Foco em volume ofensivo
-
-6. SAÍDA FINAL
-═══════════════════════════════
-Para cada bilhete informar:
+Para cada jogo informar:
 * Jogo(s)
 * Horário
 * Seleções (escanteios)
@@ -59,4 +45,4 @@ Para cada bilhete informar:
 ═══════════════════════════════
 OBJETIVO FINAL
 ═══════════════════════════════
-Montar bilhetes focados exclusivamente em escanteios, explorando padrões estatísticos reais para gerar valor e crescimento sustentável da banca.
+Mostra uma analise focado exclusivamente em escanteios, explorando padrões estatísticos reais para gerar valor e crescimento sustentável da banca.
