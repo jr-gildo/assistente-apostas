@@ -3,27 +3,11 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 from openai import OpenAI
-import streamlit as st  
 
-# Tenta carregar .env local (ignora se não existir)
 load_dotenv()
-
-# Prioriza st.secrets (nuvem) e depois os.getenv (local)
-openai_key = st.secrets.get("OPENAI_API_KEY") if hasattr(st, "secrets") else None
-if not openai_key:
-    openai_key = os.getenv("OPENAI_API_KEY")
-
-bzzoiro_key = st.secrets.get("BZZOIRO_API_KEY") if hasattr(st, "secrets") else None
-if not bzzoiro_key:
-    bzzoiro_key = os.getenv("BZZOIRO_API_KEY")
-
-client = OpenAI(api_key=openai_key)
-
-os.environ["OPENAI_API_KEY"] = openai_key
-os.environ["BZZOIRO_API_KEY"] = bzzoiro_key
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def carregar_partidas_do_json():
-    """Carrega os jogos do arquivo gerado pelo jogos.py"""
     try:
         with open("jogos_bzzoiro.json", "r", encoding="utf-8") as f:
             dados = json.load(f)
@@ -32,7 +16,6 @@ def carregar_partidas_do_json():
         return []
 
 def formatar_contexto_partidas(partidas):
-    """Formata as partidas para enviar ao GPT"""
     if not partidas:
         return "Nenhuma partida disponível para hoje."
     texto = "PARTIDAS DE HOJE (dados da Bzzoiro API com odds e previsões ML):\n\n"
@@ -69,7 +52,6 @@ def carregar_prompt(nome_arquivo):
         return f.read()
 
 def gerar_bilhetes(system_prompt, contexto_partidas):
-    """Chama a OpenAI e retorna a resposta em texto"""
     user_message = f"""
 Abaixo estão as partidas de futebol que acontecem HOJE (dados reais da API Bzzoiro).
 
