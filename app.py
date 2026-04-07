@@ -93,7 +93,7 @@ with col_bilhetes:
                 contexto = formatar_contexto_partidas(partidas_selecionadas)
                 prompt_file = "prompt_multiplas.txt" if modo == "Geral" else "prompt_escanteios.txt"
                 system_prompt = carregar_prompt(prompt_file)
-                with st.spinner("Consultando a OpenAI..."):
+                with st.spinner("Analisando Jogos ..."):
                     resposta = gerar_bilhetes(system_prompt, contexto)
                 st.success("Análise concluída!")
                 st.markdown("### 📝 Sugestões de Bilhetes")
