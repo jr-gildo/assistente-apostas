@@ -31,7 +31,7 @@ with col_config:
             else:
                 err_msg = result.stderr.encode('ascii', 'ignore').decode()
                 st.error(f"Erro: {err_msg[:200]}")
-    st.caption("Desenvolvido por Gildo Júnior")
+    #st.caption("Desenvolvido por Gildo Júnior")
 
 with col_jogos:
     st.subheader("📋 Jogos do Dia")
