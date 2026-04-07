@@ -5,9 +5,35 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+def get_client():
+    """
+    Inicializa e retorna o cliente da API (DeepSeek ou OpenAI).
+    Prioriza a DeepSeek se as variáveis DEEPSEEK_API_KEY e DEEPSEEK_BASE_URL estiverem configuradas.
+    Caso contrário, usa a OpenAI.
+    """
+    base_url = os.getenv("DEEPSEEK_BASE_URL")
+    
+    # Se a URL base da DeepSeek estiver definida, usa DeepSeek
+    if base_url:
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            raise ValueError("DEEPSEEK_API_KEY não encontrada no arquivo .env")
+        print("🔄 Inicializando cliente DeepSeek com URL:", base_url)
+        return OpenAI(api_key=api_key, base_url=base_url)
+    
+    # Fallback para OpenAI
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        raise ValueError("Nenhuma chave de API (DeepSeek ou OpenAI) encontrada no .env")
+    print("🔄 Inicializando cliente OpenAI (fallback).")
+    return OpenAI(api_key=api_key)
+
+# Instância global do cliente
+client = get_client()
 
 def carregar_partidas_do_json():
+    """Carrega os jogos do arquivo gerado pelo jogos.py"""
     try:
         with open("jogos_bzzoiro.json", "r", encoding="utf-8") as f:
             dados = json.load(f)
@@ -16,6 +42,7 @@ def carregar_partidas_do_json():
         return []
 
 def formatar_contexto_partidas(partidas):
+    """Formata as partidas para enviar ao GPT"""
     if not partidas:
         return "Nenhuma partida disponível para hoje."
     texto = "PARTIDAS DE HOJE (dados da Bzzoiro API com odds e previsões ML):\n\n"
@@ -45,6 +72,7 @@ def formatar_contexto_partidas(partidas):
     return texto
 
 def carregar_prompt(nome_arquivo):
+    """Carrega o conteúdo de um arquivo .txt (prompt)"""
     caminho = os.path.join(os.path.dirname(__file__), nome_arquivo)
     if not os.path.exists(caminho):
         return "Você é um assistente de apostas esportivas."
@@ -52,6 +80,7 @@ def carregar_prompt(nome_arquivo):
         return f.read()
 
 def gerar_bilhetes(system_prompt, contexto_partidas):
+    """Chama a API (DeepSeek ou OpenAI) e retorna a resposta"""
     user_message = f"""
 Abaixo estão as partidas de futebol que acontecem HOJE (dados reais da API Bzzoiro).
 
@@ -66,10 +95,10 @@ Se houver previsões ML, utilize-as como referência adicional.
     ]
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="deepseek-chat",          # Modelo da DeepSeek (ou "gpt-3.5-turbo" se for OpenAI)
             messages=messages,
             temperature=0.7,
         )
         return response.choices[0].message.content
     except Exception as e:
-        return f"Erro na OpenAI: {e}"
+        return f"Erro na API: {e}"
