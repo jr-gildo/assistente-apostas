@@ -5,7 +5,24 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# ========= CONFIGURAÇÃO DO CLIENTE (OPENAI OU DEEPSEEK) =========
+def get_client():
+    base_url = os.getenv("DEEPSEEK_BASE_URL")
+    if base_url:
+        api_key = os.getenv("DEEPSEEK_API_KEY")
+        if not api_key:
+            raise ValueError("DEEPSEEK_API_KEY não encontrada no .env")
+        print("🔄 Usando DeepSeek API")
+        return OpenAI(api_key=api_key, base_url=base_url)
+    else:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY não encontrada no .env")
+        print("🔄 Usando OpenAI API")
+        return OpenAI(api_key=api_key)
+
+client = get_client()
 
 # ========= FUNÇÕES DE CARREGAMENTO DE DADOS =========
 def obter_data_hoje_brasilia():
@@ -28,15 +45,11 @@ def carregar_partidas_do_json():
     partidas_hoje = []
 
     for p in todas_partidas:
-        # Extrai a data do evento (campo event_date)
         event_date_str = p.get("event_date")
         if not event_date_str:
             continue
-        # Converte para datetime (suporta formato ISO com timezone)
         try:
-            # Remove o fuso horário e converte para datetime sem timezone
             dt_evento = datetime.fromisoformat(event_date_str.replace('Z', '+00:00'))
-            # Converte para horário de Brasília
             dt_evento_brasilia = dt_evento.astimezone(timezone(timedelta(hours=-3)))
             data_evento = dt_evento_brasilia.date()
         except Exception as e:
@@ -44,12 +57,11 @@ def carregar_partidas_do_json():
             continue
 
         if data_evento == hoje:
-            # Validação da prediction: se existir, verificar se o event.id é igual ao id da partida
+            # Validação da prediction
             pred = p.get("prediction")
             if pred and isinstance(pred, dict):
                 event_pred = pred.get("event", {})
                 if event_pred.get("id") != p.get("id"):
-                    # Remove prediction incorreta
                     p["prediction"] = None
                     print(f"⚠️ Previsão removida para {p['home_team']} x {p['away_team']} (IDs não coincidem)")
             partidas_hoje.append(p)
@@ -67,7 +79,6 @@ def formatar_contexto_partidas(partidas):
         casa = p.get("home_team", "Time A")
         fora = p.get("away_team", "Time B")
         data_str = p.get("event_date", "")
-        # Formata horário local (Brasília)
         try:
             dt = datetime.fromisoformat(data_str.replace('Z', '+00:00'))
             dt_br = dt.astimezone(timezone(timedelta(hours=-3)))
@@ -85,7 +96,6 @@ def formatar_contexto_partidas(partidas):
         texto += f"💰 Odds 1X2: {odds}\n"
         texto += f"⚽ Over 2.5: {over_25} | BTTS Sim: {btts_yes}\n"
 
-        # Previsão ML (se disponível e válida)
         pred = p.get("prediction")
         if pred and isinstance(pred, dict):
             prob_h = pred.get("prob_home_win", 0)
@@ -132,25 +142,29 @@ O QUE VOCÊ DEVE FAZER:
 Para cada jogo, forneça:
 
 Análise Geral
-Momento das equipes (forma recente)
-Força ofensiva vs defensiva
-Contexto da partida (motivação, campeonato, mando de campo)
-Leitura de Mercado
-Tendência de resultado (time mais provável de vencer ou equilíbrio)
-Tendência de gols (over/under com justificativa)
-Possível comportamento do jogo (aberto, truncado, reativo, etc.)
-Indicadores Relevantes
-Probabilidade estimada (em %)
-Possíveis cenários (ex: gol cedo muda o jogo, empate favorece quem, etc.)
-Insights de Valor
-Onde pode haver valor no mercado (sem montar aposta)
-Riscos ocultos ou armadilhas da partida
-OBSERVAÇÕES:
-Se houver previsões de modelos (ML), utilize como apoio, não como verdade absoluta.
-Seja direto, técnico e objetivo.
-Estruture a resposta de forma clara e organizada por jogo.
-OBJETIVO FINAL:
+- Momento das equipes (forma recente)
+- Força ofensiva vs defensiva
+- Contexto da partida (motivação, campeonato, mando de campo)
 
+Leitura de Mercado
+- Tendência de resultado (time mais provável de vencer ou equilíbrio)
+- Tendência de gols (over/under com justificativa)
+- Possível comportamento do jogo (aberto, truncado, reativo, etc.)
+
+Indicadores Relevantes
+- Probabilidade estimada (em %)
+- Possíveis cenários (ex: gol cedo muda o jogo, empate favorece quem, etc.)
+
+Insights de Valor
+- Onde pode haver valor no mercado (sem montar aposta)
+- Riscos ocultos ou armadilhas da partida
+
+OBSERVAÇÕES:
+- Se houver previsões de modelos (ML), utilize como apoio, não como verdade absoluta.
+- Seja direto, técnico e objetivo.
+- Estruture a resposta de forma clara e organizada por jogo.
+
+OBJETIVO FINAL:
 Gerar uma análise profissional que permita ao usuário montar seus próprios bilhetes com base em informação qualificada — e não entregar apostas prontas.
 """
 
@@ -159,9 +173,12 @@ Gerar uma análise profissional que permita ao usuário montar seus próprios bi
         {"role": "user", "content": user_message}
     ]
 
+    # Escolhe o modelo baseado no cliente configurado
+    model = "deepseek-chat" if os.getenv("DEEPSEEK_BASE_URL") else "gpt-3.5-turbo"
+
     try:
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=model,
             messages=messages,
             temperature=0.7,
         )
@@ -170,7 +187,7 @@ Gerar uma análise profissional que permita ao usuário montar seus próprios bi
         print(reply)
         print("\n" + "=" * 60)
     except Exception as e:
-        print(f"❌ Erro na OpenAI: {e}")
+        print(f"❌ Erro na API: {e}")
 
 # ========= MENU PRINCIPAL =========
 def menu():
