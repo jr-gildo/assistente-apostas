@@ -32,32 +32,30 @@ with col_config:
                 err_msg = result.stderr.encode('ascii', 'ignore').decode()
                 st.error(f"Erro: {err_msg[:200]}")
     st.caption("Desenvolvido por Gildo Júnior")
-
 with col_jogos:
     st.subheader("📋 Jogos do Dia")
     partidas = carregar_partidas_do_json()
     if not partidas:
         st.warning("Nenhum jogo encontrado. Clique em 'Atualizar dados' primeiro.")
     else:
-        # Inicializa lista de seleção no session_state
-        if "selecionados" not in st.session_state:
+        # Garante que a lista de selecionados tenha o tamanho correto
+        if "selecionados" not in st.session_state or len(st.session_state.selecionados) != len(partidas):
             st.session_state.selecionados = [False] * len(partidas)
         
-        # Botões para selecionar/desmarcar todos
+        # Botões de seleção em massa
         col_sel1, col_sel2 = st.columns(2)
         with col_sel1:
             if st.button("✅ Selecionar todos"):
-                for i in range(len(partidas)):
-                    st.session_state.selecionados[i] = True
+                st.session_state.selecionados = [True] * len(partidas)
                 st.rerun()
         with col_sel2:
             if st.button("❌ Desmarcar todos"):
-                for i in range(len(partidas)):
-                    st.session_state.selecionados[i] = False
+                st.session_state.selecionados = [False] * len(partidas)
                 st.rerun()
         
         st.markdown("---")
         
+        # Exibe cada jogo com checkbox
         for i, p in enumerate(partidas):
             with st.container():
                 col_check, col_expander = st.columns([0.1, 0.9])
@@ -75,7 +73,7 @@ with col_jogos:
                             st.write(f"**Previsão ML:** H {pred.get('prob_home_win',0):.1f}% | D {pred.get('prob_draw',0):.1f}% | A {pred.get('prob_away_win',0):.1f}%")
                             st.write(f"**Placar mais provável:** {pred.get('most_likely_score', 'N/A')}")
         
-        # Exibe quantos jogos foram selecionados
+        # Mostra quantos foram selecionados
         selecionados_count = sum(st.session_state.selecionados)
         st.caption(f"✅ {selecionados_count} jogo(s) selecionado(s)")
 
