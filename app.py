@@ -102,6 +102,6 @@ with col_bilhetes:
 # Rodapé
 st.markdown("---")
 st.markdown(
-    "<p style='text-align: center; font-size: 0.8rem; color: #888;'>Assistente de Apostas v1.1 - Selecione os jogos desejados</p>",
+    "<p style='text-align: center; font-size: 0.8rem; color: #888;'>Assistente de Apostas v1.1 - Criado por Gildo Junior</p>",
     unsafe_allow_html=True
 )
