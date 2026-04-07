@@ -32,36 +32,44 @@ with col_config:
                 err_msg = result.stderr.encode('ascii', 'ignore').decode()
                 st.error(f"Erro: {err_msg[:200]}")
     st.caption("Desenvolvido por Gildo Júnior")
+    
 with col_jogos:
     st.subheader("📋 Jogos do Dia")
     partidas = carregar_partidas_do_json()
+    
     if not partidas:
         st.warning("Nenhum jogo encontrado. Clique em 'Atualizar dados' primeiro.")
     else:
-        # Garante que a lista de selecionados tenha o tamanho correto
+        # Inicializa a lista de selecionados no session_state (se não existir ou se o número de partidas mudou)
         if "selecionados" not in st.session_state or len(st.session_state.selecionados) != len(partidas):
             st.session_state.selecionados = [False] * len(partidas)
         
         # Botões de seleção em massa
         col_sel1, col_sel2 = st.columns(2)
         with col_sel1:
-            if st.button("✅ Selecionar todos"):
-                st.session_state.selecionados = [True] * len(partidas)
+            if st.button("✅ Selecionar todos", key="select_all"):
+                for i in range(len(partidas)):
+                    st.session_state.selecionados[i] = True
                 st.rerun()
         with col_sel2:
-            if st.button("❌ Desmarcar todos"):
-                st.session_state.selecionados = [False] * len(partidas)
+            if st.button("❌ Desmarcar todos", key="deselect_all"):
+                for i in range(len(partidas)):
+                    st.session_state.selecionados[i] = False
                 st.rerun()
         
         st.markdown("---")
         
-        # Exibe cada jogo com checkbox
+        # Lista de jogos com checkboxes
         for i, p in enumerate(partidas):
             with st.container():
                 col_check, col_expander = st.columns([0.1, 0.9])
                 with col_check:
-                    st.session_state.selecionados[i] = st.checkbox(
-                        "", key=f"chk_{i}", value=st.session_state.selecionados[i]
+                    # Usa o session_state para controlar o valor do checkbox
+                    st.checkbox(
+                        "", 
+                        key=f"chk_{i}", 
+                        value=st.session_state.selecionados[i],
+                        on_change=lambda idx=i: update_selecionados(idx)  # opcional
                     )
                 with col_expander:
                     with st.expander(f"{p['home_team']} x {p['away_team']} - {p.get('league', {}).get('name', '')}"):
@@ -73,7 +81,11 @@ with col_jogos:
                             st.write(f"**Previsão ML:** H {pred.get('prob_home_win',0):.1f}% | D {pred.get('prob_draw',0):.1f}% | A {pred.get('prob_away_win',0):.1f}%")
                             st.write(f"**Placar mais provável:** {pred.get('most_likely_score', 'N/A')}")
         
-        # Mostra quantos foram selecionados
+        # Atualiza o estado dos checkboxes quando o usuário clica (função de callback)
+        def update_selecionados(indice):
+            st.session_state.selecionados[indice] = st.session_state[f"chk_{indice}"]
+        
+        # Exibe quantos foram selecionados
         selecionados_count = sum(st.session_state.selecionados)
         st.caption(f"✅ {selecionados_count} jogo(s) selecionado(s)")
 
